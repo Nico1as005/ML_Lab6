@@ -56,7 +56,8 @@ def load_images(data_path, img_size=(64, 64), max_per_class=1000):
 
     return np.array(images), np.array(labels)
 
-print("\nЗагрузка изображений (возьмем по 1000 каждого)...")
+
+print("\nЗагрузка изображений (1000 штук от каждого)...")
 train_data, train_labels = load_images(data_path, img_size=(64, 64), max_per_class=1000)
 
 X_train, X_test, y_train, y_test = train_test_split(
@@ -111,7 +112,6 @@ model.compile(
     metrics=['accuracy']
 )
 
-print("\nУпрощенная архитектура модели (для избежания переобучения):")
 model.summary()
 
 early_stopping = EarlyStopping(
@@ -130,7 +130,7 @@ reduce_lr = ReduceLROnPlateau(
 )
 
 print("\n" + "=" * 50)
-print("НАЧАЛО ОБУЧЕНИЯ (с регуляризацией)")
+print("НАЧАЛО ОБУЧЕНИЯ")
 print("=" * 50)
 
 history = model.fit(
@@ -146,7 +146,6 @@ test_loss, test_acc = model.evaluate(X_test, y_test_cat, verbose=0)
 print(f"\nТочность на тестовых данных: {test_acc:.4f} ({test_acc * 100:.1f}%)")
 
 model.save('cnn_anime_human_model.h5')
-print("Модель сохранена: 'cnn_anime_human_model.h5'")
 
 import matplotlib.pyplot as plt
 
@@ -172,5 +171,4 @@ plt.grid(True)
 
 plt.tight_layout()
 plt.savefig('training_history.png')
-
 plt.show()
