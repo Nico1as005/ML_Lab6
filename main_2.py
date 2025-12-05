@@ -4,11 +4,8 @@ from tensorflow.keras.models import load_model
 import matplotlib.pyplot as plt
 import os
 
-# Загрузка сохраненной модели
 model = load_model('cnn_anime_human_model.h5')
 
-
-# Функция для предобработки изображения
 def preprocess_image(image_path, img_size=(64, 64)):
     img = Image.open(image_path).convert('RGB')
     img = img.resize(img_size)
@@ -17,7 +14,6 @@ def preprocess_image(image_path, img_size=(64, 64)):
     return img_array, img
 
 
-# Функция для отображения результата
 def display_prediction(image, prediction, classes=['Anime', 'Human']):
     plt.figure(figsize=(8, 4))
 
@@ -32,7 +28,6 @@ def display_prediction(image, prediction, classes=['Anime', 'Human']):
     plt.title('Вероятности предсказания')
     plt.ylabel('Вероятность')
 
-    # Добавляем значения на столбцы
     for bar, val in zip(bars, prediction[0]):
         plt.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.02,
                  f'{val:.3f}', ha='center', va='bottom')
@@ -41,7 +36,6 @@ def display_prediction(image, prediction, classes=['Anime', 'Human']):
     plt.show()
 
 
-# Основная часть программы
 def main():
     print("=" * 60)
     print("КЛАССИФИКАТОР: ANIME FACE vs HUMAN FACE")
@@ -62,10 +56,8 @@ def main():
             image_path = input("Введите путь к изображению: ")
 
             try:
-                # Загрузка и предобработка
                 img_array, original_img = preprocess_image(image_path)
 
-                # Предсказание
                 prediction = model.predict(img_array, verbose=0)
                 anime_prob = prediction[0][0]
                 human_prob = prediction[0][1]
@@ -86,7 +78,6 @@ def main():
                     print(f"Предсказание: HUMAN FACE")
                     print(f"Уверенность: {confidence:.2%}")
 
-                # Отображаем результат
                 display_prediction(original_img, prediction)
 
             except Exception as e:
@@ -96,18 +87,14 @@ def main():
         elif choice == '2':
             print("\nТестирование на примерах из датасета...")
             try:
-                # Попробуем найти тестовые изображения
                 test_images = []
 
-                # Ищем примеры anime и human
                 import glob
 
-                # Поиск anime примеров
                 anime_examples = glob.glob('**/*anime*.jpg', recursive=True)[:2] + \
                                  glob.glob('**/*anime*.png', recursive=True)[:2] + \
                                  glob.glob('**/*cartoon*.jpg', recursive=True)[:2]
 
-                # Поиск human примеров
                 human_examples = glob.glob('**/*human*.jpg', recursive=True)[:2] + \
                                  glob.glob('**/*human*.png', recursive=True)[:2] + \
                                  glob.glob('**/*real*.jpg', recursive=True)[:2]
@@ -115,7 +102,7 @@ def main():
                 all_examples = list(set(anime_examples + human_examples))
 
                 if len(all_examples) > 0:
-                    for img_path in all_examples[:4]:  # Тестируем первые 4
+                    for img_path in all_examples[:4]:
                         try:
                             img_array, original_img = preprocess_image(img_path)
                             prediction = model.predict(img_array, verbose=0)
